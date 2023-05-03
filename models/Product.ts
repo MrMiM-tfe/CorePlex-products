@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import slugify from "slugify"
 import { IProduct } from "../types/product";
+import { preSaveSlugGenerator } from "../helpers/model";
 
 const ProductSchema = new mongoose.Schema({
     name:{
@@ -107,16 +107,6 @@ ProductSchema.pre("save", function (next) {
 })
 
 // generate slug
-ProductSchema.pre("save", function (next) {
-    const regexExp = /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/
-
-    // check if slug is modified by user
-    if(this.slug && regexExp.test(this.slug)){
-        next()
-    }
-
-    this.slug = slugify(this.name)
-    next()
-})
+ProductSchema.pre("save", preSaveSlugGenerator)
 
 export default mongoose.model<IProduct>("Product", ProductSchema)
