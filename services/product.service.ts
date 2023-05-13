@@ -1,8 +1,11 @@
 import { ERole, IUser } from "core/types/user";
 import {
+    ESortingOptions,
+    IFilter,
     IOpProduct,
     IPreProduct,
     IProduct,
+    IProductResult,
     ProductResult,
 } from "../types/product";
 import User from "core/models/User";
@@ -10,23 +13,71 @@ import Product from "../models/Product";
 import {
     checkIdentity,
     findProductByIdentity,
+    generateFilterObj,
     handleModelErrors,
-} from "../helpers/model";
+    getPageData,
+} from "../helpers/general";
 import { EProductMSG } from "../messages/product";
-import { EStatusCodes } from "core/types/general";
+import { EResultTypes, EStatusCodes } from "core/types/general";
 
 /**
  * function to get product by id and slug
  * @param identity slug string or product id string
  */
-export const getProduct = async (identity:string) => {
-    const product = await findProductByIdentity(identity)
+export const getProduct = async (identity: string) => {
+    const product = await findProductByIdentity(identity);
     if (!product) {
-        return ProductResult.singleError("product", EProductMSG.PRODUCT_NOT_FOUND, EStatusCodes.NOT_FOUND)
+        return ProductResult.singleError(
+            "product",
+            EProductMSG.PRODUCT_NOT_FOUND,
+            EStatusCodes.NOT_FOUND
+        );
     }
 
-    return ProductResult.success(product, EProductMSG.SUCCESS)
-}
+    return ProductResult.success(product, EProductMSG.SUCCESS);
+};
+
+// get paginated products
+export const getProducts = async (
+    page: number,
+    limit: number,
+    {
+        sort = [ESortingOptions.NEWEST_FIRST],
+        filter,
+    }: { sort?: ESortingOptions[]; filter?: IFilter } = {}
+) => {
+    // generate number of products need to be skip base on page and limit
+    const skip = (page - 1) * limit;
+
+    // generate filter object for mongoose
+    const filterObj = generateFilterObj(filter);
+
+    try {
+        // get products
+        const products = await Product.find(filterObj)
+            .sort(sort.join(" "))
+            .skip(skip)
+            .limit(limit);
+
+        // get number of all products with filter
+        const totalProducts = await Product.countDocuments(filterObj);
+
+        // get page data
+        const pageData = getPageData(page, limit, totalProducts);
+
+        // create result
+        const result : IProductResult = {
+            status: 200,
+            type: EResultTypes.SUCCESS,
+            data: products as IProduct[],
+            pageData
+        }
+
+        return result
+    } catch (error) {
+        return handleModelErrors(error);
+    }
+};
 
 export const createProduct = async (data: IPreProduct, seller: IUser) => {
     // check if seller exist
@@ -180,10 +231,10 @@ export const deleteProduct = async (identity: string, userId: string) => {
 
     try {
         // delete product from db
-        await product.deleteOne()
+        await product.deleteOne();
 
-        return ProductResult.success(product, EProductMSG.SUCCESS_DELETE)
+        return ProductResult.success(product, EProductMSG.SUCCESS_DELETE);
     } catch (error) {
-        return handleModelErrors(error)
+        return handleModelErrors(error);
     }
 };

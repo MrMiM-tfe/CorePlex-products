@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { IProduct } from "../types/product";
-import { preSaveSlugGenerator } from "../helpers/model";
+import { preSaveSlugGenerator } from "../helpers/general";
 
 const ProductSchema = new mongoose.Schema({
     name:{

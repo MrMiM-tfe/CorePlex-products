@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { preSaveSlugGenerator } from "../helpers/model";
+import { preSaveSlugGenerator } from "../helpers/general";
 import { IProductCategory } from "../types/productCategory";
 
 const CategorySchema = new mongoose.Schema(

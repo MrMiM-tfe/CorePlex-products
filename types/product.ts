@@ -1,6 +1,7 @@
-import { EResultTypes, EStatusCodes, IResultError } from "core/types/general";
+import { EResultTypes, EStatusCodes, IPageData, IResultError } from "core/types/general";
 import { IUser } from "core/types/user";
 import { EProductMSG, ProductMSG } from "../messages/product";
+import { Response } from "express";
 
 // product types -----------------------------------------------
 export enum EProductTypes {
@@ -9,6 +10,28 @@ export enum EProductTypes {
     CHILDREN = "children",
 }
 
+export enum ESortingOptions {
+    PRICE_HIGH_TO_LOW = '-price',
+    PRICE_LOW_TO_HIGH = 'price',
+    NEWEST_FIRST = '-createdAt',
+    OLDEST_FIRST = 'createdAt',
+    BEST_SELLING = '-sold',
+    RATINGS_HIGH_TO_LOW = '-ratingsAverage',
+    RATINGS_LOW_TO_HIGH = 'ratingsAverage',
+    // BRAND_A_TO_Z = 'brand',
+    // BRAND_Z_TO_A = '-brand',
+    NAME_A_TO_Z = 'name',
+    NAME_Z_TO_A = '-name',
+}
+
+export interface IFilter {
+    price?: {
+      min?: number;
+      max?: number;
+    };
+    brands?: string[];
+}
+  
 export interface IPreProduct {
     name: string;
     slug?: string;
@@ -46,6 +69,7 @@ export interface IProductResult {
     message?: ProductMSG;
     errors?: IResultError[];
     data?: IProduct | IProduct[];
+    pageData?: IPageData
 }
 
 const successProductResult = (data: IProduct, message: EProductMSG = EProductMSG.SUCCESS_CREATE) => {
@@ -104,3 +128,13 @@ export const ProductResult = {
     error: errorProductResult,
     singleError: singleErrorProductResult
 };
+
+
+// product response types ------------------------------------------------------
+export interface IProductResponse extends IProductResult {}
+
+export const ProductResponse = (res: Response, result: IProductResult) => {
+    const resp : IProductResponse = result as IProductResponse
+
+    return res.status(resp.status).json(resp)
+}
