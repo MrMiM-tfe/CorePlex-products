@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { preSaveSlugGenerator } from "../helpers/general";
+import { GenerateSlug, ValidateSlug } from "../helpers/general";
 import { IProductCategory } from "../types/productCategory";
 
 const CategorySchema = new mongoose.Schema(
@@ -34,6 +34,11 @@ CategorySchema.virtual('products', {
     localField: '_id'
 })
 
-CategorySchema.pre("save", preSaveSlugGenerator)
+CategorySchema.pre("save", async function (this:IProductCategory, next: Function) {
+
+    this.slug = await GenerateSlug(this, mongoose.models.Product_Category)
+
+    next()
+})
 
 export default mongoose.model<IProductCategory>("Product_Category", CategorySchema)

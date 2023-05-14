@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { IProduct } from "../types/product";
-import { preSaveSlugGenerator } from "../helpers/general";
+import { GenerateSlug, ValidateSlug } from "../helpers/general";
+import slugify from "slugify";
 
 const ProductSchema = new mongoose.Schema({
     name:{
@@ -79,10 +80,7 @@ const ProductSchema = new mongoose.Schema({
 
 ProductSchema.index({name: "text", shortDes: "text"})
 
-ProductSchema.index(
-    { name: 1, price: 1, sold: 1, ratingsAverage: -1 },
-    { unique: true }
-);
+ProductSchema.index({ name: 1, price: 1, sold: 1, ratingsAverage: -1 });
 ProductSchema.index({ slug: 1 })
 
 ProductSchema.virtual('comments', {
@@ -107,6 +105,11 @@ ProductSchema.pre("save", function (next) {
 })
 
 // generate slug
-ProductSchema.pre("save", preSaveSlugGenerator)
+ProductSchema.pre("save", async function (this:IProduct, next: Function) {
+
+    this.slug = await GenerateSlug(this, mongoose.models.Product)
+
+    next()
+})
 
 export default mongoose.model<IProduct>("Product", ProductSchema)

@@ -27,6 +27,6 @@ const CommentSchema = new mongoose.Schema(
     }
 );
 
-CommentSchema.index({ product: 1, user: 1 }, { unique: true });
+CommentSchema.index({ product: 1, user: 1 });
 
 export default mongoose.model<IProductComment>("Product_Comment", CommentSchema)

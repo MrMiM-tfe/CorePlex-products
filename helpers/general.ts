@@ -2,24 +2,41 @@ import slugify from "slugify";
 import { EStatusCodes, IPageData, IResultError } from "@/core/types/general";
 import { IFilter, IProduct, ProductResult } from "../types/product";
 import Product from "../models/Product";
-import { isValidObjectId } from "mongoose";
+import mongoose, { isValidObjectId } from "mongoose";
 
-/**
- * @description middleware for mongoose schema to generate slug for any thing that has name and slug filed
- */
-export function preSaveSlugGenerator(this: any, next: any) {
-    const regexExp = /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/;
-
-    // check if slug is modified by user
-    if (this.slug && regexExp.test(this.slug)) {
-        next();
+export async function GenerateSlug(doc:any, model:mongoose.Model<any, {}, {}, {}, any, any>) {
+    // check if slug is modified by user or not
+    if (!ValidateSlug(doc.slug)) {
+        doc.slug = slugify(doc.name)
     }
 
-    this.slug = slugify(this.name);
-    next();
+    const data = (await model.find().sort("-slug").limit(1))[0]
+    if (data) {
+        // get latest counter number
+        const count = data.slug.split("-").pop()
+
+        // generate next counter number
+        const StrNumber = !isNaN(Number(count)) ? (Number(count) + 1).toString() : "1"
+
+        // concatenate slug with number
+        doc.slug = doc.slug + "-" + StrNumber
+    }
+
+    return doc.slug as string
 }
 
-export function handleModelErrors(error: any) {
+/**
+ * @description validate slug
+ */
+export function ValidateSlug(slug:string) {
+    const regexExp = /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/;
+    return regexExp.test(slug)
+}
+
+export function handleModelErrors(error: any) {  
+    console.log(error);
+    
+    
     if (error.name === "ValidationError") {
         let errors: IResultError[] = [];
 
@@ -27,6 +44,19 @@ export function handleModelErrors(error: any) {
             let err: IResultError = {
                 name: key,
                 message: error.errors[key].message,
+                status: EStatusCodes.CONFLICT,
+            };
+            errors.push(err);
+        });
+
+        return ProductResult.error(errors, EStatusCodes.CONFLICT);
+    }else if (error.code === 11000) {
+        let errors: IResultError[] = [];
+
+        Object.keys(error.keyValue).forEach((key) => {
+            let err: IResultError = {
+                name: key,
+                message: `'${key}' must be unique. value of '${error.keyValue[key]}' is in use`,
                 status: EStatusCodes.CONFLICT,
             };
             errors.push(err);
