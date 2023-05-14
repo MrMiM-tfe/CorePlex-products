@@ -1,4 +1,4 @@
-import { ERole, IUser } from "core/types/user";
+import { ERole, IUser } from "@/core/types/user";
 import {
     ESortingOptions,
     IFilter,
@@ -8,7 +8,7 @@ import {
     IProductResult,
     ProductResult,
 } from "../types/product";
-import User from "core/models/User";
+import User from "@/core/models/User";
 import Product from "../models/Product";
 import {
     checkIdentity,
@@ -18,7 +18,7 @@ import {
     getPageData,
 } from "../helpers/general";
 import { EProductMSG } from "../messages/product";
-import { EResultTypes, EStatusCodes } from "core/types/general";
+import { EResultTypes, EStatusCodes } from "@/core/types/general";
 
 /**
  * function to get product by id and slug

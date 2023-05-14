@@ -1,5 +1,5 @@
-import { EResultTypes, EStatusCodes, IPageData, IResultError } from "core/types/general";
-import { IUser } from "core/types/user";
+import { EResultTypes, EStatusCodes, IPageData, IResultError } from "@/core/types/general";
+import { IUser } from "@/core/types/user";
 import { EProductMSG, ProductMSG } from "../messages/product";
 import { Response } from "express";
 

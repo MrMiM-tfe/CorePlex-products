@@ -1,5 +1,5 @@
 import slugify from "slugify";
-import { EStatusCodes, IPageData, IResultError } from "core/types/general";
+import { EStatusCodes, IPageData, IResultError } from "@/core/types/general";
 import { IFilter, IProduct, ProductResult } from "../types/product";
 import Product from "../models/Product";
 import { isValidObjectId } from "mongoose";

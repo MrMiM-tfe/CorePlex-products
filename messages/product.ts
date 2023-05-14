@@ -1,4 +1,4 @@
-import { ECoreMSG } from "core/messages/general";
+import { ECoreMSG } from "@/core/messages/general";
 
 export enum EProductMSG {
     SUCCESS = "product found successfully",

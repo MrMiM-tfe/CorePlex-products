@@ -13,8 +13,8 @@ import {
     IPreProduct,
     ProductResponse,
 } from "../types/product";
-import { EResultTypes } from "core/types/general";
-import { IUser } from "core/types/user";
+import { EResultTypes } from "@/core/types/general";
+import { IUser } from "@/core/types/user";
 
 export const main = (req: Request, res: Response) => {
     res.json({ msg: "hello to pro" });
