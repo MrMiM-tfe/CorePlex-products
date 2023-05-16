@@ -1,1 +1,7 @@
-export { default as routes } from "./routes"
+import routes from "./routes"
+import docs from "./docs";
+
+export default {
+    routes,
+    docs
+}
