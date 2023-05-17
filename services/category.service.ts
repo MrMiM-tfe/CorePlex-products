@@ -1,19 +1,19 @@
-import { EResultTypes, EStatusCodes, IResultType, Result } from "@/core/types/general";
+import {EResultTypes, EStatusCodes, IResultType, Result} from "@/core/types/general";
 import ProductCategory from "../models/ProductCategory";
 import {
     IOptProductCategory,
     IPreProductCategory,
     IProductCategory,
 } from "../types/productCategory";
-import { ECategoryMSG } from "../messages/category";
+import {ECategoryMSG} from "../messages/category";
 import User from "@/core/models/User";
-import { ERole } from "@/core/types/user";
-import { handleModelErrors } from "../helpers/general";
-import { editPermission } from "@/core/helpers/auth";
-import { findDocByIdentity, getPageData } from "@/core/helpers/general";
-import { Document, Model } from "mongoose";
+import {ERole} from "@/core/types/user";
+import {handleModelErrors} from "../helpers/general";
+import {editPermission} from "@/core/helpers/auth";
+import {findDocByIdentity, getPageData} from "@/core/helpers/general";
+import {Document, Model} from "mongoose";
 
-export const getCategory = async (identity:string) => {
+export const getCategory = async (identity: string) => {
     // get and check category
     const category = await findDocByIdentity(identity, ProductCategory) as Document<unknown, {}, IProductCategory>
     if (!category) return Result.error("category", ECategoryMSG.CATEGORY_NOT_FOUND, EStatusCodes.NOT_FOUND)
@@ -32,7 +32,7 @@ export const getCategories = async (
     // generate filter object (filter by mother of category)
     const filterObj: any = {}
     if (motherIdentity) {
-        
+
         const motherCat = await findDocByIdentity(motherIdentity, ProductCategory) as Document<unknown, {}, IProductCategory>
         if (motherCat) {
             filterObj["mother"] = motherCat._id?.toString()
@@ -54,7 +54,7 @@ export const getCategories = async (
 
         // create result
         const res: IResultType = {
-            type:EResultTypes.SUCCESS,
+            type: EResultTypes.SUCCESS,
             status: EStatusCodes.SUCCESS,
             data: categories,
             pageData,
@@ -138,7 +138,7 @@ export const editCategory = async (
 
     try {
         // update category
-        const newCategory = await category.updateOne(data, { new: true });
+        const newCategory = await category.updateOne(data, {new: true});
         return Result.success(
             newCategory,
             ECategoryMSG.SUCCESS_EDIT,

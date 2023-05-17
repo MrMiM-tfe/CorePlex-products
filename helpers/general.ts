@@ -1,10 +1,10 @@
 import slugify from "slugify";
-import { EStatusCodes, IPageData, IResultError } from "@/core/types/general";
-import { IFilter, IProduct, ProductResult } from "../types/product";
+import {EStatusCodes, IPageData, IResultError} from "@/core/types/general";
+import {IFilter, ProductResult} from "../types/product";
 import Product from "../models/Product";
-import mongoose, { isValidObjectId } from "mongoose";
+import mongoose, {isValidObjectId} from "mongoose";
 
-export async function GenerateSlug(doc:any, model:mongoose.Model<any, {}, {}, {}, any, any>) {
+export async function GenerateSlug(doc: any, model: mongoose.Model<any, {}, {}, {}, any>) {
     // check if slug is modified by user or not
     if (!ValidateSlug(doc.slug)) {
         doc.slug = slugify(doc.name)
@@ -28,15 +28,15 @@ export async function GenerateSlug(doc:any, model:mongoose.Model<any, {}, {}, {}
 /**
  * @description validate slug
  */
-export function ValidateSlug(slug:string) {
+export function ValidateSlug(slug: string) {
     const regexExp = /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/;
     return regexExp.test(slug)
 }
 
-export function handleModelErrors(error: any) {  
+export function handleModelErrors(error: any) {
     console.log(error);
-    
-    
+
+
     if (error.name === "ValidationError") {
         let errors: IResultError[] = [];
 
@@ -50,7 +50,7 @@ export function handleModelErrors(error: any) {
         });
 
         return ProductResult.error(errors, EStatusCodes.CONFLICT);
-    }else if (error.code === 11000) {
+    } else if (error.code === 11000) {
         let errors: IResultError[] = [];
 
         Object.keys(error.keyValue).forEach((key) => {
@@ -80,7 +80,7 @@ export async function findProductByIdentity(identity: string) {
     try {
         switch (identityType) {
             case "slug":
-                return await Product.findOne({ slug: identity });
+                return await Product.findOne({slug: identity});
             case "id":
                 return await Product.findById(identity);
             default:
@@ -103,26 +103,26 @@ export function checkIdentity(identity: string) {
 export function generateFilterObj(filter?: IFilter) {
     const filterObj: any = {};
     if (filter && filter.brands && filter.brands.length > 0) {
-      filterObj.$or = filter.brands.map((brand: string) => ({ brand }));
+        filterObj.$or = filter.brands.map((brand: string) => ({brand}));
     }
     if (filter && filter.price) {
-      filterObj.price = {};
-      if (filter.price.min) {
-        filterObj.price.$gte = filter.price.min;
-      }
-      if (filter.price.max) {
-        filterObj.price.$lte = filter.price.max;
-      }
+        filterObj.price = {};
+        if (filter.price.min) {
+            filterObj.price.$gte = filter.price.min;
+        }
+        if (filter.price.max) {
+            filterObj.price.$lte = filter.price.max;
+        }
     }
     return filterObj;
 }
 
-export function getPageData(page:number, limit:number, totalData: number) {
+export function getPageData(page: number, limit: number, totalData: number) {
     const totalPages = Math.ceil(totalData / limit);
     const nextPage = page < totalPages ? page + 1 : null;
     const prevPage = page > 1 ? page - 1 : null;
 
-    const pageData : IPageData = {
+    const pageData: IPageData = {
         totalPages,
         nextPage,
         prevPage

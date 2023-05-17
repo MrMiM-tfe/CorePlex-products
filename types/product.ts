@@ -1,7 +1,7 @@
-import { EResultTypes, EStatusCodes, IPageData, IResultError } from "@/core/types/general";
-import { IUser } from "@/core/types/user";
-import { EProductMSG, ProductMSG } from "../messages/product";
-import { Response } from "express";
+import {EResultTypes, EStatusCodes, IPageData, IResultError} from "@/core/types/general";
+import {IUser} from "@/core/types/user";
+import {EProductMSG, ProductMSG} from "../messages/product";
+import {Response} from "express";
 
 // product types -----------------------------------------------
 export enum EProductTypes {
@@ -26,12 +26,12 @@ export enum ESortingOptions {
 
 export interface IFilter {
     price?: {
-      min?: number;
-      max?: number;
+        min?: number;
+        max?: number;
     };
     brands?: string[];
 }
-  
+
 export interface IPreProduct {
     name: string;
     slug?: string;
@@ -60,7 +60,8 @@ export interface IProduct extends IPreProduct {
     ratingsQuantity: number;
 }
 
-export interface IOpProduct extends Partial<Omit<IProduct, "seller">> {}
+export interface IOpProduct extends Partial<Omit<IProduct, "seller">> {
+}
 
 // product result types ------------------------------------------------------
 export interface IProductResult {
@@ -107,7 +108,7 @@ const singleErrorProductResult = (
     status: EStatusCodes = EStatusCodes.BAD_REQUEST
 ) => {
     // generate result error
-    const error : IResultError = {
+    const error: IResultError = {
         name,
         message,
         status
@@ -116,7 +117,7 @@ const singleErrorProductResult = (
     // generate error
     const res: IProductResult = {
         type: EResultTypes.ERROR,
-        status:error.status,
+        status: error.status,
         errors: [error],
     }
 
@@ -131,10 +132,11 @@ export const ProductResult = {
 
 
 // product response types ------------------------------------------------------
-export interface IProductResponse extends IProductResult {}
+export interface IProductResponse extends IProductResult {
+}
 
 export const ProductResponse = (res: Response, result: IProductResult) => {
-    const resp : IProductResponse = result as IProductResponse
+    const resp: IProductResponse = result as IProductResponse
 
     return res.status(resp.status).json(resp)
 }

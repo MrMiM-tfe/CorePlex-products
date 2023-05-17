@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { GenerateSlug, ValidateSlug } from "../helpers/general";
-import { IProductCategory } from "../types/productCategory";
+import {GenerateSlug} from "../helpers/general";
+import {IProductCategory} from "../types/productCategory";
 
 const CategorySchema = new mongoose.Schema(
     {
@@ -25,7 +25,7 @@ const CategorySchema = new mongoose.Schema(
     }
 );
 
-CategorySchema.index({slug:1})
+CategorySchema.index({slug: 1})
 
 // set products virtual
 CategorySchema.virtual('products', {
@@ -34,7 +34,7 @@ CategorySchema.virtual('products', {
     localField: '_id'
 })
 
-CategorySchema.pre("save", async function (this:IProductCategory, next: Function) {
+CategorySchema.pre("save", async function (this: IProductCategory, next: Function) {
 
     this.slug = await GenerateSlug(this, mongoose.models.Product_Category)
 

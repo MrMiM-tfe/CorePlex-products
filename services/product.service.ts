@@ -1,4 +1,4 @@
-import { ERole, IUser } from "@/core/types/user";
+import {ERole, IUser} from "@/core/types/user";
 import {
     ESortingOptions,
     IFilter,
@@ -17,8 +17,8 @@ import {
     handleModelErrors,
     getPageData,
 } from "../helpers/general";
-import { EProductMSG } from "../messages/product";
-import { EResultTypes, EStatusCodes } from "@/core/types/general";
+import {EProductMSG} from "../messages/product";
+import {EResultTypes, EStatusCodes} from "@/core/types/general";
 
 /**
  * function to get product by id and slug
@@ -66,7 +66,7 @@ export const getProducts = async (
         const pageData = getPageData(page, limit, totalProducts);
 
         // create result
-        const result : IProductResult = {
+        const result: IProductResult = {
             status: 200,
             type: EResultTypes.SUCCESS,
             data: products as IProduct[],
@@ -106,6 +106,8 @@ export const createProduct = async (data: IPreProduct, seller: IUser) => {
 /**
  * function to edit product by id and slug
  * @param identity slug string or product id string
+ * @param data
+ * @param editor
  */
 export const editProduct = async (
     identity: string,
@@ -157,7 +159,7 @@ export const editProduct = async (
             );
     }
 
-    // note: slug validation is by model it self
+    // note: slug validation is by model itself
 
     // update options
     const options = {
@@ -168,7 +170,7 @@ export const editProduct = async (
         if (identityType === "slug") {
             // save in db
             const product = await Product.findOneAndUpdate(
-                { slug: identity },
+                {slug: identity},
                 data,
                 options
             );
@@ -198,6 +200,7 @@ export const editProduct = async (
 /**
  * function to delete product by id and slug
  * @param identity slug string or product id string
+ * @param userId
  */
 export const deleteProduct = async (identity: string, userId: string) => {
     // get and check product

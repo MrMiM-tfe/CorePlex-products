@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import {Request, Response} from "express";
 import {
     createProduct,
     deleteProduct,
@@ -13,12 +13,8 @@ import {
     IPreProduct,
     ProductResponse,
 } from "../types/product";
-import { EResultTypes } from "@/core/types/general";
-import { IUser } from "@/core/types/user";
-
-export const main = (req: Request, res: Response) => {
-    res.json({ msg: "hello to pro" });
-};
+import {EResultTypes} from "@/core/types/general";
+import {IUser} from "@/core/types/user";
 
 export const index = async (req: Request, res: Response) => {
     const page = Number(req.query.page) ?? 1;
@@ -38,7 +34,7 @@ export const index = async (req: Request, res: Response) => {
         });
     }
 
-    const result = await getProducts(page, limit, { sort, filter });
+    const result = await getProducts(page, limit, {sort, filter});
 
     return ProductResponse(res, result);
 };
