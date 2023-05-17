@@ -1,3 +1,6 @@
+import { Types } from "mongoose";
+import { IProduct } from "./product";
+
 export interface IPreProductCategory {
     name:string,
     slug?:string,
@@ -6,5 +9,9 @@ export interface IPreProductCategory {
 }
 
 export interface IProductCategory extends IPreProductCategory {
-    slug:string
+    _id: Types.ObjectId,
+    slug:string,
+    products?: IProduct[]
 }
+
+export interface IOptProductCategory extends Partial<IProductCategory> {}
