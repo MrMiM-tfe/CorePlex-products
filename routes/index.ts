@@ -9,7 +9,7 @@ import {sellerCheck} from "@/core/middlewares/auth";
 
 // category routes --------------------------------------------------
 router.get("/category", category.index)
-router.get("/category/:slug", category.index)
+router.get("/category/:slug", category.single)
 // category protected routes
 router.post("/category", sellerCheck, category.create)
 router.put("/category/:slug", sellerCheck, category.edit)

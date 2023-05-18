@@ -15,7 +15,7 @@ import {Document, Model} from "mongoose";
 
 export const getCategory = async (identity: string) => {
     // get and check category
-    const category = await findDocByIdentity(identity, ProductCategory) as Document<unknown, {}, IProductCategory>
+    const category = await findDocByIdentity(identity, ProductCategory, "products") as Document<unknown, {}, IProductCategory>
     if (!category) return Result.error("category", ECategoryMSG.CATEGORY_NOT_FOUND, EStatusCodes.NOT_FOUND)
 
     return Result.success(category, ECategoryMSG.SUCCESS, EStatusCodes.SUCCESS)
@@ -43,7 +43,7 @@ export const getCategories = async (
         // get categories
         const categories = await ProductCategory.find(filterObj)
             .skip(skip)
-            .limit(limit)
+            .limit(limit).populate("products")
 
 
         // get total number of categories

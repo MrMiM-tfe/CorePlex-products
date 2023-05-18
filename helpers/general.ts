@@ -29,6 +29,9 @@ export async function GenerateSlug(doc: any, model: mongoose.Model<any, {}, {}, 
  * @description validate slug
  */
 export function ValidateSlug(slug: string) {
+    
+    if (!slug) return false
+    
     const regexExp = /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/;
     return regexExp.test(slug)
 }
