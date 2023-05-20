@@ -16,7 +16,6 @@ export async function GenerateSlug(doc: any, model: mongoose.Model<any, {}, {}, 
     const regexPattern = new RegExp(`^${doc.slug}-\\d+$`)
 
     const data = (await model.find({slug: regexPattern}).sort("-slug").limit(1))[0]
-    console.log(data);
     
     if (data) {
         // get latest counter number
