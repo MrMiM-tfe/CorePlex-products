@@ -13,7 +13,6 @@ import {
     IPreProduct,
     ProductResponse,
 } from "../types/product";
-import {EResultTypes} from "@/core/types/general";
 import {IUser} from "@/core/types/user";
 
 export const index = async (req: Request, res: Response) => {

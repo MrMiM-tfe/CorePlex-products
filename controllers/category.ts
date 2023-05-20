@@ -1,4 +1,4 @@
-import express, {Request, Response} from "express";
+import {Request, Response} from "express";
 import {createCategory, deleteCategory, editCategory, getCategories, getCategory} from "../services/category.service";
 import {SendResponse} from "@/core/types/general";
 import {IOptProductCategory, IPreProductCategory} from "../types/productCategory";

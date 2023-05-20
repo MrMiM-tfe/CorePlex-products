@@ -10,9 +10,10 @@ import Product from "../models/Product";
 import { IProduct } from "../types/product";
 import { Document } from "mongoose";
 
-export const getComment = async (identity: string) => {
+export const getComment = async (id: string) => {
     // get comment
-    const comment = await findDocByIdentity(identity, ProductComment) as Document<unknown, {}, IPreProductComment>
+    const comment = await ProductComment.findById(id)
+    if (!comment) return Result.error("comment", ECommentMSG.COMMENT_NOT_FOUND, EStatusCodes.NOT_FOUND)
 
     return Result.success(comment, ECommentMSG.SUCCESS, EStatusCodes.SUCCESS)
 }
@@ -27,7 +28,8 @@ export const getProductComments = async (productIdentity:string, page:number, li
 
     // get product and create filter obj
     const product = await findDocByIdentity(productIdentity, Product) as Document<unknown, {}, IProduct>
-    const filter = {product: product._id?.toString() as string}
+    if (!product) return Result.error("product", ECommentMSG.PRODUCT_NOT_FOUND, EStatusCodes.NOT_FOUND)
+    const filter = {product: product._id?.toString() as string, state: ECommentState.ACCEPTED}
 
     try {
         // get comments

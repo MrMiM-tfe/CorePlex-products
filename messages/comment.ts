@@ -9,6 +9,7 @@ export enum ECommentMSG {
     CAN_CREATE_COMMENT = "can not create comment",
     USER_NOT_FOUND = "user not found",
     COMMENT_NOT_FOUND = "comment not found",
+    PRODUCT_NOT_FOUND = "product not found",
     EDITOR_NOT_FOUND = "editor not found",
     NO_PERMISSION = " no permission",
 
