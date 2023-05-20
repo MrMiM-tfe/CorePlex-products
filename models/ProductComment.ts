@@ -20,6 +20,11 @@ const CommentSchema = new mongoose.Schema(
             type:mongoose.Types.ObjectId,
             ref:"User",
             required:true
+        },
+        state:{
+            type: String,
+            enum:["accepted", "waiting", "rejected"],
+            default: "waiting"
         }
     },
     {
