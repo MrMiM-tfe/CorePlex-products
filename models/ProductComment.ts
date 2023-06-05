@@ -38,4 +38,11 @@ const CommentSchema = new mongoose.Schema(
 
 CommentSchema.index({ product: 1, user: 1 });
 
+
+CommentSchema.virtual("parents", {
+    ref:"Product_Comment",
+    localField: "_id",
+    foreignField:"parent"
+})
+
 export default mongoose.model<IProductComment>("Product_Comment", CommentSchema)
