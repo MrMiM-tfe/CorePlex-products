@@ -21,6 +21,10 @@ const CommentSchema = new mongoose.Schema(
             ref:"User",
             required:true
         },
+        parent:{
+            type:mongoose.Types.ObjectId,
+            ref:"Product_Comment",
+        },
         state:{
             type: String,
             enum:["accepted", "waiting", "rejected"],

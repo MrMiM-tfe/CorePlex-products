@@ -21,6 +21,7 @@ export interface IPreProductComment {
     body:string,
     product:string,
     user?:string,
+    parent?:string,
 }
 
 export interface IProductComment extends IPreProductComment{

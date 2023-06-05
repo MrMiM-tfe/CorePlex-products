@@ -11,6 +11,7 @@ export enum ECommentMSG {
     COMMENT_NOT_FOUND = "comment not found",
     PRODUCT_NOT_FOUND = "product not found",
     EDITOR_NOT_FOUND = "editor not found",
+    PARENT_NOT_FOUND = "parent not found",
     NO_PERMISSION = " no permission",
 
 };
