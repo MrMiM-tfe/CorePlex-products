@@ -12,7 +12,7 @@ import { Document } from "mongoose";
 
 export const getComment = async (id: string) => {
     // get comment
-    const comment = await ProductComment.findById(id)
+    const comment = await ProductComment.findById(id).populate("parents")
     if (!comment) return Result.error("comment", ECommentMSG.COMMENT_NOT_FOUND, EStatusCodes.NOT_FOUND)
 
     return Result.success(comment, ECommentMSG.SUCCESS, EStatusCodes.SUCCESS)
@@ -33,7 +33,7 @@ export const getProductComments = async (productIdentity:string, page:number, li
 
     try {
         // get comments
-        const comments = await ProductComment.find(filter).skip(skip).limit(limit)
+        const comments = await ProductComment.find(filter).populate("parents").skip(skip).limit(limit)
 
         // get total number of comments base on filter
         const totalComments = await ProductComment.countDocuments(filter);
