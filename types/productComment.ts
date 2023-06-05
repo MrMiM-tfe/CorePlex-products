@@ -1,3 +1,4 @@
+import { Types } from "mongoose"
 
 export interface ICommentFilter {
     user?:string,
@@ -14,6 +15,7 @@ export enum ECommentState {
     ACCEPTED = "accepted",
     REJECTED = "rejected",
     WAITING = "waiting",
+    PARENT_DELETED = "parent_deleted",
 }
 
 export interface IPreProductComment {
@@ -25,7 +27,9 @@ export interface IPreProductComment {
 }
 
 export interface IProductComment extends IPreProductComment{
-    state: ECommentState
+    _id: Types.ObjectId
+    state: ECommentState,
+    children?: IProductComment[]
 }
 
 export interface IOptProductComment extends Partial<Omit<IProductComment, "product" | "user">> {}

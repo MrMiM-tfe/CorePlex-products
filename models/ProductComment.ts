@@ -27,7 +27,7 @@ const CommentSchema = new mongoose.Schema(
         },
         state:{
             type: String,
-            enum:["accepted", "waiting", "rejected"],
+            enum:["accepted", "waiting", "rejected", "parent_deleted"],
             default: "waiting"
         }
     },
@@ -39,7 +39,7 @@ const CommentSchema = new mongoose.Schema(
 CommentSchema.index({ product: 1, user: 1 });
 
 
-CommentSchema.virtual("parents", {
+CommentSchema.virtual("children", {
     ref:"Product_Comment",
     localField: "_id",
     foreignField:"parent"

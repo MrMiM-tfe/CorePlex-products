@@ -12,7 +12,7 @@ import { Document } from "mongoose";
 
 export const getComment = async (id: string) => {
     // get comment
-    const comment = await ProductComment.findById(id).populate("parents")
+    const comment = await ProductComment.findById(id).populate("children")
     if (!comment) return Result.error("comment", ECommentMSG.COMMENT_NOT_FOUND, EStatusCodes.NOT_FOUND)
 
     return Result.success(comment, ECommentMSG.SUCCESS, EStatusCodes.SUCCESS)
@@ -33,7 +33,7 @@ export const getProductComments = async (productIdentity:string, page:number, li
 
     try {
         // get comments
-        const comments = await ProductComment.find(filter).populate("parents").skip(skip).limit(limit)
+        const comments = await ProductComment.find(filter).populate("children").skip(skip).limit(limit)
 
         // get total number of comments base on filter
         const totalComments = await ProductComment.countDocuments(filter);
@@ -138,7 +138,7 @@ export const deleteComment = async (commentId: string, editorId: string) => {
     const user = await User.findById(editorId);
     if (!user) return Result.error("user", ECommentMSG.USER_NOT_FOUND, EStatusCodes.CONFLICT);
 
-    const comment = await ProductComment.findById(commentId);
+    const comment = await ProductComment.findById(commentId).populate("children");
 
     // check if comment exist
     if (!comment) return Result.error("commentId", ECommentMSG.COMMENT_NOT_FOUND, EStatusCodes.NOT_FOUND);
@@ -151,6 +151,13 @@ export const deleteComment = async (commentId: string, editorId: string) => {
     try {
         // delete comment from db
         await comment.deleteOne();
+
+        // change state of all comment children
+        if (comment.children) {
+            for (const child of comment.children) {
+                await ProductComment.findByIdAndUpdate(child._id, {state: ECommentState.PARENT_DELETED})
+            }
+        }
 
         return Result.success(comment, ECommentMSG.SUCCESS_DELETE, EStatusCodes.SUCCESS);
     } catch (error) {
