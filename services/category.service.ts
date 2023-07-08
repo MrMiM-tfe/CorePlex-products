@@ -125,10 +125,7 @@ export const editCategory = async (
         );
 
     // get Category by identity and check it
-    const category = (await findDocByIdentity(
-        identity,
-        ProductCategory
-    )) as Model<IProductCategory>;
+    const category = await findDocByIdentity(identity,ProductCategory);
     if (!category)
         return Result.error(
             "category",
@@ -168,10 +165,7 @@ export const deleteCategory = async (identity: string, editorId: string) => {
         );
 
     // get Category by identity and check it
-    const category = (await findDocByIdentity(
-        identity,
-        ProductCategory
-    )) as Model<IProductCategory>;
+    const category = await findDocByIdentity(identity,ProductCategory);
     if (!category)
         return Result.error(
             "category",
